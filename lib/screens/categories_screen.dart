@@ -4,8 +4,7 @@ import '../data/dummy_data.dart';
 
 class CategoriesScreen extends StatefulWidget {
   static const screenPath = '/categories';
-  List<Map<String, bool>> filters = [];
-  CategoriesScreen(filters);
+  CategoriesScreen();
 
   @override
   State<CategoriesScreen> createState() => _CategoriesScreenState();
@@ -21,8 +20,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           crossAxisSpacing: 20,
           mainAxisSpacing: 20),
       children: DUMMY_CATEGORIES
-          .map((cat) =>
-              CategoryItem(cat.id, cat.color, cat.title, widget.filters))
+          .map((cat) => CategoryItem(cat.id, cat.color, cat.title))
           .toList(),
     );
   }

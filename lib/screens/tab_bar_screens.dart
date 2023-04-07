@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import '../widget/my_drawer.dart';
 import './categories_screen.dart';
 import './favorites_screen.dart';
+import '../model/meals.dart';
 
 class TabBarScreen extends StatefulWidget {
   static const screenPath = '/tabbarscreen';
-  TabBarScreen();
+  List<Meal> _favoriteMealList;
+  TabBarScreen(this._favoriteMealList);
 
   @override
   State<TabBarScreen> createState() => _TabBarScreenState();
@@ -13,27 +15,7 @@ class TabBarScreen extends StatefulWidget {
 
 class _TabBarScreenState extends State<TabBarScreen> {
   int _selectedIndex = 0;
-  List<Map<String, bool>> _filters = [];
   List<Map<String, Object>> _pages = [];
-
-  @override
-  void didChangeDependencies() {
-    setState(() {
-      _filters =
-          ModalRoute.of(context)?.settings.arguments as List<Map<String, bool>>;
-      _pages = [
-        {
-          "title": 'Delicious Food App',
-          "page": CategoriesScreen(_filters),
-        },
-        {
-          "title": "Favorites",
-          "page": const FavoritesScreen(),
-        }
-      ];
-    });
-    super.didChangeDependencies();
-  }
 
   void _selectPage(int index) {
     setState(() {
@@ -43,6 +25,16 @@ class _TabBarScreenState extends State<TabBarScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _pages = [
+      {
+        "title": 'Delicious Food App',
+        "page": CategoriesScreen(),
+      },
+      {
+        "title": "Favorites",
+        "page": FavoritesScreen(widget._favoriteMealList, () {}),
+      }
+    ];
     String _title = _pages[_selectedIndex]['title'] as String;
     return Scaffold(
       appBar: AppBar(

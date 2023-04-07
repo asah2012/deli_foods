@@ -6,13 +6,12 @@ class CategoryItem extends StatelessWidget {
   final Color color;
   final String title;
   final String id;
-  List<Map<String, bool>> filters = [];
 
-  CategoryItem(this.id, this.color, this.title, this.filters);
+  CategoryItem(this.id, this.color, this.title);
 
   void selectedCategory(BuildContext ctx) {
     Navigator.of(ctx).pushNamed(CategoryDetailScreen.screenPath,
-        arguments: {'categoryId': id, 'filters': filters});
+        arguments: {'categoryId': id});
 
     // Navigator.of(ctx).push(MaterialPageRoute(builder: (_) {
     //   return CategoryDetailScreen();
@@ -21,6 +20,7 @@ class CategoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("inside categoryItem build");
     return InkWell(
       onTap: () => {selectedCategory(context)},
       borderRadius: BorderRadius.circular(15),

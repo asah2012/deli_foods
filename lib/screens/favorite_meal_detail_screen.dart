@@ -2,11 +2,11 @@ import 'package:deli_foods/data/dummy_data.dart';
 import 'package:flutter/material.dart';
 import '../model/meals.dart';
 
-class MealDetailScreen extends StatelessWidget {
-  static const screenPath = '/mealDetail';
+class FavoriteMealDetail extends StatelessWidget {
+  static const screenPath = '/FavoriteMealDetail';
   Function addToFavorite;
 
-  MealDetailScreen(this.addToFavorite);
+  FavoriteMealDetail(this.addToFavorite);
 
   @override
   Widget build(BuildContext context) {
@@ -77,11 +77,6 @@ class MealDetailScreen extends StatelessWidget {
       floatingActionButton: Wrap(
         spacing: 20,
         children: [
-          FloatingActionButton(
-            child: const Icon(Icons.delete),
-            onPressed: () => Navigator.of(context)
-                .pop({'action': 'deleteMeal', 'meal': meal}),
-          ),
           FloatingActionButton(
             child: const Icon(Icons.favorite),
             onPressed: () => addToFavorite(meal),

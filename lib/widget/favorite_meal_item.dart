@@ -1,16 +1,16 @@
+import 'package:deli_foods/screens/favorite_meal_detail_screen.dart';
 import 'package:deli_foods/screens/meal_detail_screen.dart';
 import 'package:flutter/material.dart';
 import '../model/meals.dart';
 
-class MealItem extends StatelessWidget {
+class FavoriteMealItem extends StatelessWidget {
   final Meal meal;
-  final Function removeItem;
 
-  MealItem({required this.meal, required this.removeItem});
+  FavoriteMealItem({required this.meal});
 
   selectMeal(BuildContext context) {
     Map<String, Object> tempResult = {};
-    Navigator.of(context).pushNamed(MealDetailScreen.screenPath, arguments: {
+    Navigator.of(context).pushNamed(FavoriteMealDetail.screenPath, arguments: {
       'mealId': meal.id
     }).then((result) => {
           if (result != null) {selectAction(result)}
@@ -22,11 +22,6 @@ class MealItem extends StatelessWidget {
     String action = myMap['action'];
     Meal meal = myMap['meal'];
     switch (action) {
-      case 'deleteMeal':
-        {
-          removeItem(meal);
-        }
-        break;
       case 'addToFavorite':
         {
           //addToFavorites(meal);

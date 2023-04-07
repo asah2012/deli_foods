@@ -1,4 +1,9 @@
-import 'package:deli_foods/screens/filter_screen.dart';
+import 'package:deli_foods/screens/favorite_meal_detail_screen.dart';
+import 'package:deli_foods/screens/favorites_screen.dart';
+
+import '../model/meals.dart';
+import '../screens/filter_screen.dart';
+import './data/dummy_data.dart';
 
 import './screens/meal_detail_screen.dart';
 
@@ -19,8 +24,50 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // This widget is the root of your application.
-  //List<Map<String, bool>> filters = [];
+  List<Meal> _mealList = DUMMY_MEALS;
+  List<Meal> _favoriteMealList = [];
+  List<Map<String, bool>> _currentFilters = [];
+
+  void _addToFavorite(Meal favoriteMeal) {
+    if (!_favoriteMealList.any((meal) => meal.id == favoriteMeal.id)) {
+      setState(() {
+        _favoriteMealList.add(favoriteMeal);
+      });
+    }
+  }
+
+  void _removeFromFavorite(Meal favoriteMeal) {
+    if (_favoriteMealList.any((meal) => meal.id == favoriteMeal.id)) {
+      setState(() {
+        _favoriteMealList.remove(favoriteMeal);
+      });
+    }
+  }
+
+  void _updateMealList(selectedFilters) {
+    print("inside updateMeal list");
+    List<Meal> tempMealList = [];
+    bool isVeganFilter = selectedFilters[0]['isVegan'] as bool;
+    bool isVegetarianFilter = selectedFilters[1]['isVegetarian'] as bool;
+    bool isGlutenFreeFilter = selectedFilters[2]['isGlutenFree'] as bool;
+    bool isLactoseFreeFilter = selectedFilters[3]['isLactoseFree'] as bool;
+
+    for (int i = 0; i < DUMMY_MEALS.length; i++) {
+      if (!isVeganFilter || DUMMY_MEALS[i].isVegan) {
+        if (!isVegetarianFilter || DUMMY_MEALS[i].isVegetarian) {
+          if (!isGlutenFreeFilter || DUMMY_MEALS[i].isGlutenFree) {
+            if (!isLactoseFreeFilter || DUMMY_MEALS[i].isLactoseFree) {
+              tempMealList.add(DUMMY_MEALS[i]);
+            }
+          }
+        }
+      }
+    }
+    setState(() {
+      _mealList = tempMealList;
+      _currentFilters = selectedFilters;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,14 +93,18 @@ class _MyAppState extends State<MyApp> {
                 fontWeight: FontWeight.normal)),
       ),
       //home: const CategoriesScreen(title: 'Delicious Food App'),
-      home: TabBarScreen(),
+      home: TabBarScreen(_favoriteMealList),
       //home : CategoriesScreen(),
 
       routes: {
-        TabBarScreen.screenPath: (ctx) => TabBarScreen(),
-        CategoryDetailScreen.screenPath: (ctx) => CategoryDetailScreen(),
-        MealDetailScreen.screenPath: (ctx) => MealDetailScreen(),
-        FilterScreen.screenPath: (ctx) => FilterScreen(),
+        TabBarScreen.screenPath: (ctx) => TabBarScreen(_favoriteMealList),
+        CategoryDetailScreen.screenPath: (ctx) =>
+            CategoryDetailScreen(_mealList),
+        MealDetailScreen.screenPath: (ctx) => MealDetailScreen(_addToFavorite),
+        FilterScreen.screenPath: (ctx) =>
+            FilterScreen(_currentFilters, _updateMealList),
+        FavoriteMealDetail.screenPath: (ctx) =>
+            FavoriteMealDetail(_removeFromFavorite),
       },
     );
   }

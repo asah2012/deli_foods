@@ -2,40 +2,43 @@ import 'package:deli_foods/screens/tab_bar_screens.dart';
 import 'package:flutter/material.dart';
 
 class FilterScreen extends StatefulWidget {
-  FilterScreen({super.key});
   static const screenPath = '/FilterScreen';
+  final Function updateMealList;
+  List<Map<String, bool>> selectedFilter;
+  FilterScreen(this.selectedFilter, this.updateMealList);
 
   @override
   State<FilterScreen> createState() => _FilterScreenState();
 }
 
 class _FilterScreenState extends State<FilterScreen> {
-  List<Map<String, bool>> selectedFilter = [];
-
   void _onUpdate(int listIndex, Map<String, bool> selectedItem, bool value) {
     String selectedKey = selectedItem.keys.first;
     selectedItem[selectedKey] = value;
     setState(() {
-      selectedFilter.removeAt(listIndex);
-      selectedFilter.insert(listIndex, selectedItem);
+      widget.selectedFilter.removeAt(listIndex);
+      widget.selectedFilter.insert(listIndex, selectedItem);
     });
   }
 
   void _saveFilter() {
-    Navigator.of(context)
-        .popAndPushNamed(TabBarScreen.screenPath, arguments: selectedFilter);
+    widget.updateMealList(widget.selectedFilter);
+    /*Navigator.of(context).popAndPushNamed(TabBarScreen.screenPath,
+        arguments: widget.selectedFilter); */
   }
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      selectedFilter = [
-        {'isVegan': false},
-        {'isVegetarian': false},
-        {'isGlutenFree': false},
-        {'isLactoseFree': false},
-      ];
+      if (widget.selectedFilter.isEmpty) {
+        widget.selectedFilter = [
+          {'isVegan': false},
+          {'isVegetarian': false},
+          {'isGlutenFree': false},
+          {'isLactoseFree': false},
+        ];
+      }
     });
   }
 
@@ -60,7 +63,7 @@ class _FilterScreenState extends State<FilterScreen> {
           Expanded(
               child: ListView.builder(
             itemBuilder: (ctx, index) {
-              Map<String, bool> selectedItem = selectedFilter[index];
+              Map<String, bool> selectedItem = widget.selectedFilter[index];
               return SwitchListTile(
                 title: Text(selectedItem.keys.first,
                     style: Theme.of(context).textTheme.bodyLarge),
@@ -74,7 +77,7 @@ class _FilterScreenState extends State<FilterScreen> {
                 },
               );
             },
-            itemCount: selectedFilter.length,
+            itemCount: widget.selectedFilter.length,
           ))
         ],
       ),
